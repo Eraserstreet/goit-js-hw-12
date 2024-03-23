@@ -1,22 +1,27 @@
-import { searchImgs } from '../main';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-export function fetchImg() {
-  const searchParams = new URLSearchParams({
-    key: '22926721-5d20aa08498ffd1ff2f906542',
-    // key: '42609290-856768105ab9e79485c69bf61',
-    q: searchImgs,
+import { imgGallery } from '../main';
+import { formEl } from '../main';
+
+export function getImage(inputValue) {
+  const BASE_URL = 'https://pixabay.com';
+  const END_POINT = '/api/';
+  const params = new URLSearchParams({
+    key: '42962590-b9bb006e5b1e7f6cfce132ccb',
+    q: inputValue,
     image_type: 'photo',
     orientation: 'horizontal',
-    safesearch: 'true',
+    safesearch: true,
   });
+  const url = `${BASE_URL}${END_POINT}?${params}`;
 
-  const url = `https://pixabay.com/api/?${searchParams}`;
-
-  return fetch(url).then(response => {
-    if (!response.ok) {
+  return fetch(url).then(res => {
+    if (!res.ok) {
       throw new Error(response.status);
     }
-
-    return response.json();
+    return res.json();
   });
 }

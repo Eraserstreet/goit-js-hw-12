@@ -146,6 +146,7 @@ img {
   transform: translate(-50%, -50%);
   z-index: 1001;
 }
+
 .loader::after {
   content: '';
   box-sizing: border-box;

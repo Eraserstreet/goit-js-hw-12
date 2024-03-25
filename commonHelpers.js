@@ -1,22 +1,22 @@
-import{S as c,i as u}from"./assets/vendor-7659544d.js";(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const e of document.querySelectorAll('link[rel="modulepreload"]'))i(e);new MutationObserver(e=>{for(const t of e)if(t.type==="childList")for(const l of t.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&i(l)}).observe(document,{childList:!0,subtree:!0});function s(e){const t={};return e.integrity&&(t.integrity=e.integrity),e.referrerPolicy&&(t.referrerPolicy=e.referrerPolicy),e.crossOrigin==="use-credentials"?t.credentials="include":e.crossOrigin==="anonymous"?t.credentials="omit":t.credentials="same-origin",t}function i(e){if(e.ep)return;e.ep=!0;const t=s(e);fetch(e.href,t)}})();function p(o){const r="https://pixabay.com",s="/api/",i=new URLSearchParams({key:"42962590-b9bb006e5b1e7f6cfce132ccb",q:o,image_type:"photo",orientation:"horizontal",safesearch:!0}),e=`${r}${s}?${i}`;return fetch(e).then(t=>{if(!t.ok)throw new Error(response.status);return t.json()})}const n=document.querySelector(".gallery"),a=document.querySelector(".form");a.addEventListener("submit",o=>{o.preventDefault();const r=o.currentTarget.elements.image.value.trim();n.innerHTML='<div class="loader"></div>',p(r).then(s=>{const i=f(s.hits);n.innerHTML=i;const e={captionsData:"alt"};let t=new c(".gallery a",e);if(t.on("show.simplelightbox",function(){}),t.refresh(),s.hits.length===0)return error}).catch(s=>{u.error({maxWidth:"432px",height:"48px",color:"red",position:"topRight",message:"Error occurred while loading images. Please try again later."})}).finally(()=>a.reset())});const f=o=>o.map(r=>`<li class="gallery-item">
-           <a class="gallery-link" href="${r.largeImageURL}">
+import{i as u,S as h}from"./assets/vendor-7659544d.js";(function(){const e=document.createElement("link").relList;if(e&&e.supports&&e.supports("modulepreload"))return;for(const t of document.querySelectorAll('link[rel="modulepreload"]'))i(t);new MutationObserver(t=>{for(const r of t)if(r.type==="childList")for(const n of r.addedNodes)n.tagName==="LINK"&&n.rel==="modulepreload"&&i(n)}).observe(document,{childList:!0,subtree:!0});function s(t){const r={};return t.integrity&&(r.integrity=t.integrity),t.referrerPolicy&&(r.referrerPolicy=t.referrerPolicy),t.crossOrigin==="use-credentials"?r.credentials="include":t.crossOrigin==="anonymous"?r.credentials="omit":r.credentials="same-origin",r}function i(t){if(t.ep)return;t.ep=!0;const r=s(t);fetch(t.href,r)}})();function p(o){const e="https://pixabay.com",s="/api/",i=new URLSearchParams({key:"42962590-b9bb006e5b1e7f6cfce132ccb",q:o,image_type:"photo",orientation:"horizontal",safesearch:!0}),t=`${e}${s}?${i}`;return fetch(t).then(r=>{if(!r.ok)throw new Error(response.status);return r.json()})}function l(){u.error({maxWidth:"432px",height:"48px",color:"red",position:"topRight",message:"Sorry, there are no images matching your search query. Please try again!"})}function f(o){const e=m(o.hits);c.innerHTML=e;const s={captionsData:"alt"};let i=new h(".gallery a",s);i.on("show.simplelightbox",function(){}),i.refresh()}const c=document.querySelector(".gallery"),a=document.querySelector(".form");a.addEventListener("submit",o=>{o.preventDefault();const e=o.currentTarget.elements.image.value.trim();c.innerHTML='<div class="loader"></div>',p(e).then(s=>{s.hits.length===0?l():f(s)}).catch(s=>{l()}).finally(()=>{a.reset()})});const m=o=>o.map(e=>`<li class="gallery-item">
+           <a class="gallery-link" href="${e.largeImageURL}">
              <img
                class="gallery-image"
                width="1280"
                height="152"
-               src="${r.webformatURL}"
-               data-source="${r.largeImageURL}"
-               alt="${r.tags}"
+               src="${e.webformatURL}"
+               data-source="${e.largeImageURL}"
+               alt="${e.tags}"
              />
              </a>
              <ul class="gallery-description">
-             <li><h3>Likes</h3><p>${r.likes}</p>
+             <li><h3>Likes</h3><p>${e.likes}</p>
              </li>
-             <li><h3>Views</h3><p>${r.views}</p>
+             <li><h3>Views</h3><p>${e.views}</p>
                </li>
-               <li><h3>Comments</h3><p>${r.comments}</p>
+               <li><h3>Comments</h3><p>${e.comments}</p>
                  </li>
-                 <li><h3>Downloads</h3><p>${r.downloads}</p>
+                 <li><h3>Downloads</h3><p>${e.downloads}</p>
                    </li>
              </ul>
            </li>`).join("");

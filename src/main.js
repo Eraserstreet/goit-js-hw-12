@@ -36,7 +36,10 @@ const displayImages = data => {
   const markup = imageTemplate(data.hits);
   imgGallery.innerHTML += markup;
 
-  const lightbox = new SimpleLightbox('.gallery a');
+  // Додаємо обробник подій для кожного зображення у галереї
+  const lightbox = new SimpleLightbox('.gallery a', {
+    /* Опції конфігурації */
+  });
 };
 
 const handleFormSubmit = async event => {
@@ -60,6 +63,7 @@ const handleFormSubmit = async event => {
     const data = await getImage(searchQuery, currentPage);
     if (data.hits.length === 0) {
       showErrorToast();
+      loadMoreBtn.style.display = 'none'; // При порожній відповіді приховуємо кнопку "Load more"
       return;
     }
 
@@ -72,6 +76,7 @@ const handleFormSubmit = async event => {
     }
   } catch (error) {
     showErrorToast();
+    loadMoreBtn.style.display = 'none'; // При помилці приховуємо кнопку "Load more"
   } finally {
     hideLoader();
     formEl.reset();
@@ -99,6 +104,9 @@ const handleLoadMore = async () => {
     if (data.totalHits <= currentPage * 15) {
       loadMoreBtn.style.display = 'none';
     }
+
+    // Прокрутка сторінки
+    smoothScroll();
   } catch (error) {
     showErrorToast();
   } finally {
@@ -108,3 +116,13 @@ const handleLoadMore = async () => {
 
 formEl.addEventListener('submit', handleFormSubmit);
 loadMoreBtn.addEventListener('click', handleLoadMore);
+
+// Функція для плавної прокрутки сторінки
+function smoothScroll() {
+  const galleryItem = document.querySelector('.gallery-item');
+  const cardHeight = galleryItem.getBoundingClientRect().height;
+  window.scrollBy({
+    top: cardHeight * 2, // Прокручуємо на дві висоти карточки галереї
+    behavior: 'smooth', // Плавна прокрутка
+  });
+}

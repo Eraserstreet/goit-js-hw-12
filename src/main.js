@@ -1,14 +1,27 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-
 import { getImage } from './js/pixabay-api';
 import { imageTemplate } from './js/render-functions';
 
-// помилка
-function showErrorToast() {
+const formEl = document.querySelector('.form');
+const imgGallery = document.querySelector('.gallery');
+const loadMoreBtn = document.querySelector('.load-more');
+const flowerSpinner = document.querySelector('.flower-spinner');
+
+let searchQuery = '';
+let currentPage = 1;
+
+const showLoader = () => {
+  flowerSpinner.style.display = 'block';
+};
+
+const hideLoader = () => {
+  flowerSpinner.style.display = 'none';
+};
+
+const showErrorToast = () => {
   iziToast.error({
     maxWidth: '432px',
     height: '48px',
@@ -17,41 +30,81 @@ function showErrorToast() {
     message:
       'Sorry, there are no images matching your search query. Please try again!',
   });
-}
+};
 
-// зображення
-function displayImages(data) {
+const displayImages = data => {
   const markup = imageTemplate(data.hits);
-  imgGallery.innerHTML = markup;
-  const galleryCfg = { captionsData: 'alt' };
-  let lightbox = new SimpleLightbox('.gallery a', galleryCfg);
-  lightbox.on('show.simplelightbox', function () {});
-  lightbox.refresh();
-}
+  imgGallery.innerHTML += markup;
 
-// DOM
-export const imgGallery = document.querySelector('.gallery');
-export const formEl = document.querySelector('.form');
+  const lightbox = new SimpleLightbox('.gallery a');
+};
 
-// Слухач подій для форми
-formEl.addEventListener('submit', event => {
+const handleFormSubmit = async event => {
   event.preventDefault();
-  const inputValue = event.currentTarget.elements.image.value.trim();
-  imgGallery.innerHTML = '<div class="loader"></div>';
+  imgGallery.innerHTML = '';
+  currentPage = 1;
 
-  // Зображення і обробка
-  getImage(inputValue)
-    .then(data => {
-      if (data.hits.length === 0) {
-        showErrorToast();
-      } else {
-        displayImages(data);
-      }
-    })
-    .catch(error => {
-      showErrorToast();
-    })
-    .finally(() => {
-      formEl.reset();
+  searchQuery = event.currentTarget.elements.image.value.trim();
+
+  if (!searchQuery) {
+    iziToast.error({
+      color: 'yellow',
+      message: ` Please fill in the field for search query.`,
+      position: 'topRight',
     });
-});
+    return;
+  }
+
+  showLoader();
+  try {
+    const data = await getImage(searchQuery, currentPage);
+    if (data.hits.length === 0) {
+      showErrorToast();
+      return;
+    }
+
+    displayImages(data);
+
+    if (data.totalHits > 15) {
+      loadMoreBtn.style.display = 'block';
+    } else {
+      loadMoreBtn.style.display = 'none';
+    }
+  } catch (error) {
+    showErrorToast();
+  } finally {
+    hideLoader();
+    formEl.reset();
+  }
+};
+
+const handleLoadMore = async () => {
+  currentPage += 1;
+
+  showLoader();
+
+  try {
+    const data = await getImage(searchQuery, currentPage);
+    if (data.hits.length === 0) {
+      iziToast.info({
+        color: 'yellow',
+        message: "We're sorry, but you've reached the end of search results.",
+        position: 'topRight',
+      });
+      return;
+    }
+
+    displayImages(data);
+
+    if (data.totalHits <= currentPage * 15) {
+      loadMoreBtn.style.display = 'none';
+    }
+  } catch (error) {
+    showErrorToast();
+  } finally {
+    hideLoader();
+  }
+};
+
+formEl.addEventListener('submit', handleFormSubmit);
+loadMoreBtn.addEventListener('click', handleLoadMore);

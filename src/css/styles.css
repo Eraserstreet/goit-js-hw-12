@@ -166,3 +166,33 @@ img {
     transform: rotate(360deg);
   }
 }
+
+/* .load-more {
+  margin-top: 10px;
+} */
+
+.load-more {
+  margin-top: 10px;
+  border-radius: 8px;
+  padding: 8px 16px;
+  min-width: 91px;
+  height: 40px;
+  background: #4e75ff;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.load-more:hover,
+.load-more:focus {
+  background-color: #6c8cff;
+}
+
+.mini-container {
+  display: flex;
+  justify-content: center;
+}

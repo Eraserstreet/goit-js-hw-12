@@ -87,12 +87,12 @@ const handleFormSubmit = async event => {
 
 const handleLoadMore = async () => {
   currentPage += 1;
-
   showLoader();
-
   try {
     const data = await getImage(searchQuery, currentPage);
-    if (data.hits.length === 0) {
+    displayImages(data);
+    if (data.totalHits <= currentPage * 15) {
+      loadMoreBtn.style.display = 'none';
       iziToast.info({
         color: 'yellow',
         message: "We're sorry, but you've reached the end of search results.",
@@ -100,13 +100,6 @@ const handleLoadMore = async () => {
       });
       return;
     }
-
-    displayImages(data);
-
-    if (data.totalHits <= currentPage * 15) {
-      loadMoreBtn.style.display = 'none';
-    }
-
     smoothScroll();
   } catch (error) {
     showErrorToast();

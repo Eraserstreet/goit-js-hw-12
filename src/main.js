@@ -8,17 +8,18 @@ import { imageTemplate } from './js/render-functions';
 const formEl = document.querySelector('.form');
 const imgGallery = document.querySelector('.gallery');
 const loadMoreBtn = document.querySelector('.load-more');
-const flowerSpinner = document.querySelector('.flower-spinner');
+const loader = document.querySelector('.loader');
 
 let searchQuery = '';
 let currentPage = 1;
+let lightboxInstance = null;
 
 const showLoader = () => {
-  flowerSpinner.style.display = 'block';
+  loader.style.display = 'block';
 };
 
 const hideLoader = () => {
-  flowerSpinner.style.display = 'none';
+  loader.style.display = 'none';
 };
 
 const showErrorToast = () => {
@@ -36,7 +37,11 @@ const displayImages = data => {
   const markup = imageTemplate(data.hits);
   imgGallery.innerHTML += markup;
 
-  const lightbox = new SimpleLightbox('.gallery a', {});
+  if (!lightboxInstance) {
+    lightboxInstance = new SimpleLightbox('.gallery a', {});
+  } else {
+    lightboxInstance.refresh();
+  }
 };
 
 const handleFormSubmit = async event => {
@@ -49,7 +54,7 @@ const handleFormSubmit = async event => {
   if (!searchQuery) {
     iziToast.error({
       color: 'yellow',
-      message: ` Please fill in the field for search query.`,
+      message: 'Please fill in the field for search query.',
       position: 'topRight',
     });
     return;
@@ -74,6 +79,7 @@ const handleFormSubmit = async event => {
   } catch (error) {
     showErrorToast();
     loadMoreBtn.style.display = 'none';
+  } finally {
     hideLoader();
     formEl.reset();
   }

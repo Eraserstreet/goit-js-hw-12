@@ -4,6 +4,8 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import axios from 'axios';
 
+let lightboxInstance = null;
+
 export async function getImage(inputValue, page) {
   const BASE_URL = 'https://pixabay.com';
   const END_POINT = '/api/';
@@ -23,8 +25,20 @@ export async function getImage(inputValue, page) {
     if (!response.data.hits || response.data.hits.length === 0) {
       throw new Error('No images found');
     }
+
+    if (!lightboxInstance) {
+      lightboxInstance = new SimpleLightbox('.gallery a', {});
+    } else {
+      lightboxInstance.refresh();
+    }
+
     return response.data;
   } catch (error) {
+    iziToast.error({
+      title: 'Error',
+      message: 'Failed to fetch images',
+      position: 'topRight',
+    });
     throw new Error('Error fetching images');
   }
 }

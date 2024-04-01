@@ -12,7 +12,7 @@ const loader = document.querySelector('.loader');
 
 let searchQuery = '';
 let currentPage = 1;
-let lightboxInstance = null;
+let lightboxInstance = null; // створив екземпляр SimpleLightbox глобально
 
 const showLoader = () => {
   loader.style.display = 'block';
@@ -33,6 +33,7 @@ const showErrorToast = () => {
   });
 };
 
+//викликав метод refresh()
 const displayImages = data => {
   const markup = imageTemplate(data.hits);
   imgGallery.innerHTML += markup;
@@ -60,12 +61,14 @@ const handleFormSubmit = async event => {
     return;
   }
 
+  // clear Load more
+  loadMoreBtn.style.display = 'none';
+
   showLoader();
   try {
     const data = await getImage(searchQuery, currentPage);
     if (data.hits.length === 0) {
       showErrorToast();
-      loadMoreBtn.style.display = 'none';
       return;
     }
 
@@ -73,12 +76,9 @@ const handleFormSubmit = async event => {
 
     if (data.totalHits > 15) {
       loadMoreBtn.style.display = 'block';
-    } else {
-      loadMoreBtn.style.display = 'none';
     }
   } catch (error) {
     showErrorToast();
-    loadMoreBtn.style.display = 'none';
   } finally {
     hideLoader();
     formEl.reset();

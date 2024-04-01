@@ -2,9 +2,9 @@ import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
-
+const imgGallery = document.querySelector('.gallery');
 export const imageTemplate = images => {
-  return images
+  const markup = images
     .map(
       image =>
         `<li class="gallery-item">
@@ -31,4 +31,14 @@ export const imageTemplate = images => {
            </li>`
     )
     .join('');
+
+  imgGallery.insertAdjacentHTML('beforeend', markup);
+  myGallery.refresh();
 };
+const myGallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+  close: true,
+  enableKeyboard: true,
+  docClose: true,
+});
